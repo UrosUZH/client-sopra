@@ -1,0 +1,2 @@
+// dont forget to import the component, define function, render stuff to update
+// this.state.showModal = true; lueg the shit. thissetSate({showModal: true} );

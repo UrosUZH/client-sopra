@@ -31,7 +31,9 @@ class Game extends React.Component {
       users: null
     };
   }
-
+  userprofile() {
+    this.props.history.push("/user");
+  }
   logout() {
     localStorage.removeItem("token");
     this.props.history.push("/login");
@@ -72,7 +74,14 @@ class Game extends React.Component {
               {this.state.users.map(user => {
                 return (
                   <PlayerContainer key={user.id}>
-                    <Player user={user} />
+                    <button
+                      onClick={() => {
+                        this.props.history.push(`/user/${user.id}`);
+                        localStorage.setItem("id", "/user/" + user.id);
+                      }}
+                    >
+                      <Player user={user} />
+                    </button>
                   </PlayerContainer>
                 );
               })}
@@ -83,7 +92,7 @@ class Game extends React.Component {
                 this.logout();
               }}
             >
-              Logout
+              Logout {localStorage.getItem("id")}
             </Button>
           </div>
         )}

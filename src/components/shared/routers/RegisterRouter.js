@@ -1,14 +1,14 @@
 import React from "react";
 import styled from "styled-components";
 import { Redirect, Route } from "react-router-dom";
-import Game from "../../game/Game";
+import Register from "../../register/Register";
 
 const Container = styled.div`
   display: flex;
   flex-direction: column;
 `;
 
-class GameRouter extends React.Component {
+class RegisterRouter extends React.Component {
   render() {
     /**
      * "this.props.base" is "/app" because as been passed as a prop in the parent of GameRouter, i.e., App.js
@@ -17,14 +17,14 @@ class GameRouter extends React.Component {
       <Container>
         <Route
           exact
-          path={`${this.props.base}/dashboard`}
-          render={() => <Game />}
+          path={`${this.props.base}/dahboard`}
+          render={() => <Register />}
         />
 
         <Route
           exact
           path={`${this.props.base}`}
-          render={() => <Redirect to={`${this.props.base}/dashboard`} />}
+          render={() => <Redirect to={`${this.props.base}/dahboard`} />}
         />
       </Container>
     );
@@ -33,4 +33,4 @@ class GameRouter extends React.Component {
 /*
  * Don't forget to export your component!
  */
-export default GameRouter;
+export default RegisterRouter;

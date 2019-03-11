@@ -56,35 +56,16 @@ const ButtonContainer = styled.div`
   margin-top: 20px;
 `;
 
-/**
- * Classes in React allow you to have an internal state within the class and to have the React life-cycle for your component.
- * You should have a class (instead of a functional component) when:
- * - You need an internal state that cannot be achieved via props from other parent components
- * - You fetch data from the server (e.g., in componentDidMount())
- * - You want to access the DOM via Refs
- * https://reactjs.org/docs/react-component.html
- * @Class
- */
-class Login extends React.Component {
-  /**
-   * If you don’t initialize the state and you don’t bind methods, you don’t need to implement a constructor for your React component.
-   * The constructor for a React component is called before it is mounted (rendered).
-   * In this case the initial state is defined in the constructor. The state is a JS object containing two fields: name and username
-   * These fields are then handled in the onChange() methods in the resp. InputFields
-   */
+class Register extends React.Component {
   constructor() {
     super();
     this.state = {
-      name: null,
-      username: null
+      username: null,
+      name: null
     };
   }
-  /**
-   * HTTP POST request is sent to the backend.
-   * If the request is successful, a new user is returned to the front-end and its token is stored in the localStorage.
-   */
-  login() {
-    fetch(`${getDomain()}/login`, {
+  register() {
+    fetch(`${getDomain()}/users`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json"
@@ -99,14 +80,16 @@ class Login extends React.Component {
         const user = new User(returnedUser);
         // store the token into the local storage
         if (user.error === 0) {
-          localStorage.setItem("token", user.token);
+          //localStorage.setItem("token", user.token);
           // user login successfully worked --> navigate to the route /game in the GameRouter
-          this.props.history.push(`/game`);
-          alert("Login Successful!");
-        } else if (user.error === 2) {
-          alert("Wrong Username doesn't match Password");
+          alert("Registration Successful!");
+          this.props.history.push(`/login`);
+        } else if (user.error === 1) {
+          alert("Register Error: Username is Taken");
+          this.props.history.push(`/register`);
         } else {
-          alert("Username and/or Password wrong");
+          alert("Random Error");
+          this.props.history.push(`/login`);
         }
       })
       .catch(err => {
@@ -117,34 +100,21 @@ class Login extends React.Component {
         }
       });
   }
-  registerhere() {
-    this.props.history.push("/register");
+  logout() {
+    localStorage.removeItem("token");
+    this.props.history.push("/login");
   }
-
-  /**
-   *  Every time the user enters something in the input field, the state gets updated.
-   * @param key (the key of the state for identifying the field that needs to be updated)
-   * @param value (the value that gets assigned to the identified state key)
-   */
   handleInputChange(key, value) {
     // Example: if the key is username, this statement is the equivalent to the following one:
     // this.setState({'username': value});
     this.setState({ [key]: value });
   }
 
-  /**
-   * componentDidMount() is invoked immediately after a component is mounted (inserted into the tree).
-   * Initialization that requires DOM nodes should go here.
-   * If you need to load data from a remote endpoint, this is a good place to instantiate the network request.
-   * You may call setState() immediately in componentDidMount().
-   * It will trigger an extra rendering, but it will happen before the browser updates the screen.
-   */
-  componentDidMount() {}
-
   render() {
     return (
       <BaseContainer>
         <FormContainer>
+          <Label>Registration</Label>
           <Form>
             <Label>Username</Label>
             <InputField
@@ -156,30 +126,22 @@ class Login extends React.Component {
             <Label>Password</Label>
             <InputField
               type="password"
-              name="loginpassword"
+              name="pwd"
               placeholder="Enter here.."
               onChange={e => {
                 this.handleInputChange("name", e.target.value);
               }}
             />
-            <Button
-              disabled={this.state.username || this.state.name}
-              onClick={() => {
-                this.registerhere();
-              }}
-            >
-              Register here
-            </Button>
 
             <ButtonContainer>
               <Button
                 disabled={!this.state.username || !this.state.name}
                 width="50%"
                 onClick={() => {
-                  this.login();
+                  this.register();
                 }}
               >
-                Login
+                Register
               </Button>
             </ButtonContainer>
           </Form>
@@ -189,8 +151,4 @@ class Login extends React.Component {
   }
 }
 
-/**
- * You can get access to the history object's properties via the withRouter.
- * withRouter will pass updated match, location, and history props to the wrapped component whenever it renders.
- */
-export default withRouter(Login);
+export default withRouter(Register);
