@@ -10,6 +10,7 @@ class User {
     this.token = null;
     this.status = null;
     this.error = 10;
+    this.date = null;
     this.birthday = null;
     this.games = null;
     this.moves = null;

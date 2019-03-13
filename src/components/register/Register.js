@@ -65,7 +65,7 @@ class Register extends React.Component {
     };
   }
   register() {
-    fetch(`${getDomain()}/users`, {
+    fetch(`${getDomain()}/user`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json"
@@ -75,23 +75,17 @@ class Register extends React.Component {
         name: this.state.name
       })
     })
-      .then(response => response.json())
-      .then(returnedUser => {
-        const user = new User(returnedUser);
-        // store the token into the local storage
-        if (user.error === 0) {
-          //localStorage.setItem("token", user.token);
-          // user login successfully worked --> navigate to the route /game in the GameRouter
-          alert("Registration Successful!");
-          this.props.history.push(`/login`);
-        } else if (user.error === 1) {
-          alert("Register Error: Username is Taken");
-          this.props.history.push(`/register`);
+      .then(response => {
+        if (response.status === 409) {
+          throw new Error("Username already Exists");
+        } else if (response.status === 201) {
+          alert("Registration went good!");
+          this.props.history.push("/login");
         } else {
-          alert("Random Error");
-          this.props.history.push(`/login`);
+          throw new Error("Unknown Error");
         }
       })
+
       .catch(err => {
         if (err.message.match(/Failed to fetch/)) {
           alert("The server cannot be reached. Did you start it?");

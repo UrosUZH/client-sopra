@@ -76,8 +76,8 @@ class Game extends React.Component {
                   <PlayerContainer key={user.id}>
                     <button
                       onClick={() => {
-                        this.props.history.push(`/user/${user.id}`);
                         localStorage.setItem("id", "/user/" + user.id);
+                        this.props.history.push(`/user/${user.id}`);
                       }}
                     >
                       <Player user={user} />

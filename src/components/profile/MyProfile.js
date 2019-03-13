@@ -82,35 +82,34 @@ const ButtonContainer = styled.div`
   margin-top: 20px;
 `;
 
-class Profile extends React.Component {
+class MyProfile extends React.Component {
   constructor() {
     super();
     this.state = {
       username: null,
       name: null,
       status: null,
-      token: null,
+      token: localStorage.getItem("token"),
       date: null,
-      birthday: "Unknown",
-      id: null,
-      updateUsername: null,
-      updateBirthday: null
+      birthday: "Unknown"
     };
   }
-  swag() {
-    localStorage.removeItem("id");
-  }
+
   componentDidMount() {
-    const key = localStorage.getItem("id");
-    fetch(`${getDomain()}${key}`, {
-      method: "GET",
+    fetch(`${getDomain()}/MyProfile`, {
+      method: "POST",
       headers: {
         "Content-Type": "application/json"
-      }
+      },
+      body: JSON.stringify({
+        username: this.state.username,
+        name: this.state.name,
+        token: this.state.token
+      })
     })
       .then(response => {
         if (response.status === 200) {
-          alert("status ok 200");
+          alert("status myprofile ok 200");
         } else if (response.status === 404) {
           throw new Error("User ID was not found");
         }
@@ -118,13 +117,11 @@ class Profile extends React.Component {
       })
 
       .then(returnedUser => {
-        const useri = new User(returnedUser);
-        this.handleInputChange("id", useri.id);
-        this.handleInputChange("username", useri.username);
-        this.handleInputChange("status", useri.status);
-        this.handleInputChange("date", useri.date);
-        this.handleInputChange("name", useri.name);
-        localStorage.setItem("hisID", useri.id);
+        const user = new User(returnedUser);
+        this.handleInputChange("username", user.username);
+        this.handleInputChange("status", user.status);
+        this.handleInputChange("date", user.date);
+        this.handleInputChange("name", user.name);
       })
 
       .catch(err => {
@@ -134,44 +131,6 @@ class Profile extends React.Component {
           alert(`Something went wrong during the login: ${err.message}`);
         }
       });
-  }
-  logout() {
-    localStorage.removeItem("token");
-    this.props.history.push("/login");
-  }
-
-  editProfile() {
-    if (
-      this.state.updateBirthday !== null &&
-      this.state.updateUsername !== null
-    ) {
-      fetch(`${getDomain()}/user/1`, {
-        method: "PUT",
-        headers: {
-          "Content-type": "application/json"
-        },
-        body: JSON.stringify({
-          username: this.state.updateUsername,
-          id: this.state.id
-        })
-      })
-        .then(response => {
-          if (response.status === 204) {
-            alert("status ok 204");
-          } else if (response.status === 404) {
-            throw new Error("User ID was not found or Username taken");
-          }
-        })
-        .catch(err => {
-          if (err.message.match(/Failed to fetch/)) {
-            alert("The server cannot be reached. Did you start it?");
-          } else {
-            alert(`Something went wrong during the login: ${err.message}`);
-          }
-        });
-    } else {
-      alert("Else alert");
-    }
   }
 
   handleInputChange(key, value) {
@@ -184,48 +143,12 @@ class Profile extends React.Component {
     return (
       <BaseContainer>
         <FormContainer>
-          <Label>Profile {this.state.updateUsername}</Label>
-          <Button
-            //disabled={
-            // localStorage.getItem("hisID") !== localStorage.getItem("myID")
-            //}
-            width={"20%"}
-            onClick={() => {
-              this.editProfile();
-            }}
-          >
-            Edit Profile
-          </Button>
+          <Label>Profile</Label>
           <Form>
-            <h3>
-              UserName: {this.state.username} {localStorage.getItem("myID")}
-              <div align="right">
-                {" "}
-                <InputField
-                  placeholder="Edit Username"
-                  onChange={e => {
-                    this.handleInputChange("updateUsername", e.target.value);
-                  }}
-                />
-              </div>
-            </h3>
-
-            <h3>
-              Status: {this.state.status} {this.state.id}
-            </h3>
-            <h3>Creation Date: {this.state.date} </h3>
-            <h3>
-              Birthday: {this.state.birthday}
-              <div align="right">
-                {" "}
-                <InputField
-                  placeholder="Edit Birthday"
-                  onChange={e => {
-                    this.handleInputChange("updateBirthday", e.target.value);
-                  }}
-                />
-              </div>
-            </h3>
+            <Label>Username: {this.state.username} </Label>
+            <Label>Status: {this.state.status} </Label>
+            <Label>Creation Date: {this.state.date} </Label>
+            <Label>Birthday:{this.state.birthday}</Label>
             <ButtonContainer>
               <Button
                 width="50%"
@@ -244,4 +167,4 @@ class Profile extends React.Component {
   }
 }
 
-export default withRouter(Profile);
+export default withRouter(MyProfile);
