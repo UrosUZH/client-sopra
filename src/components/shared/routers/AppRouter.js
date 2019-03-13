@@ -53,7 +53,7 @@ class AppRouter extends React.Component {
               render={() => <Register base={"/register"} />}
             />
             <Route
-              path={localStorage.getItem("id")}
+              path={"/user"}
               exact
               render={() => (
                 <ProfileGuard>

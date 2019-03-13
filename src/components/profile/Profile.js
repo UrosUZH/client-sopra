@@ -94,7 +94,7 @@ class Profile extends React.Component {
       birthday: "Unknown",
       id: null,
       updateUsername: null,
-      updateBirthday: null
+      updateBirthday: "test"
     };
   }
   swag() {
@@ -117,14 +117,16 @@ class Profile extends React.Component {
         return response.json();
       })
 
-      .then(returnedUser => {
-        const useri = new User(returnedUser);
-        this.handleInputChange("id", useri.id);
-        this.handleInputChange("username", useri.username);
-        this.handleInputChange("status", useri.status);
-        this.handleInputChange("date", useri.date);
-        this.handleInputChange("name", useri.name);
-        localStorage.setItem("hisID", useri.id);
+      .then(async returnedUser => {
+        await new Promise(resolve => setTimeout(resolve, 800));
+        const user = new User(returnedUser);
+        this.handleInputChange("id", user.id);
+        this.handleInputChange("username", user.username);
+        this.handleInputChange("status", user.status);
+        this.handleInputChange("date", user.date);
+        this.handleInputChange("name", user.name);
+        this.handleInputChange("birthday", user.birthday);
+        localStorage.setItem("hisID", user.id);
       })
 
       .catch(err => {
@@ -145,19 +147,22 @@ class Profile extends React.Component {
       this.state.updateBirthday !== null &&
       this.state.updateUsername !== null
     ) {
-      fetch(`${getDomain()}/user/1`, {
+      alert("swag");
+      fetch(`${getDomain()}/user/${localStorage.getItem("myID")}`, {
         method: "PUT",
         headers: {
           "Content-type": "application/json"
         },
         body: JSON.stringify({
           username: this.state.updateUsername,
-          id: this.state.id
+          id: this.state.id,
+          birthday: this.state.updateBirthday
         })
       })
         .then(response => {
           if (response.status === 204) {
             alert("status ok 204");
+            this.props.history.push(`/user/${localStorage.getItem("myID")}`);
           } else if (response.status === 404) {
             throw new Error("User ID was not found or Username taken");
           }

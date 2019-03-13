@@ -79,7 +79,7 @@ class Register extends React.Component {
         if (response.status === 409) {
           throw new Error("Username already Exists");
         } else if (response.status === 201) {
-          alert("Registration went good!");
+          alert("Registration went good! User created!");
           this.props.history.push("/login");
         } else {
           throw new Error("Unknown Error");
