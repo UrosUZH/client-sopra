@@ -7,6 +7,7 @@ const Container = styled.div`
   display: flex;
   flex-direction: column;
 `;
+//// wanted to implement it but couldn't find a use
 
 class RegisterRouter extends React.Component {
   render() {

@@ -91,7 +91,7 @@ class Game extends React.Component {
                 this.logout();
               }}
             >
-              Logout {localStorage.getItem("id")}
+              Logout
             </Button>
           </div>
         )}

@@ -78,7 +78,7 @@ class Register extends React.Component {
         if (response.status === 409) {
           throw new Error("Username already Exists");
         } else if (response.status === 201) {
-          alert("Registration went good! User created!");
+          alert("User created!");
           this.props.history.push("/login");
         } else {
           throw new Error("Unknown Error");
@@ -93,13 +93,7 @@ class Register extends React.Component {
         }
       });
   }
-  logout() {
-    localStorage.removeItem("token");
-    this.props.history.push("/login");
-  }
   handleInputChange(key, value) {
-    // Example: if the key is username, this statement is the equivalent to the following one:
-    // this.setState({'username': value});
     this.setState({ [key]: value });
   }
 

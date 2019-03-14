@@ -43,11 +43,6 @@ class AppRouter extends React.Component {
               )}
             />
             <Route
-              path="/MyProfile"
-              exact
-              render={() => <Register base={"/MyProfile"} />}
-            />
-            <Route
               path="/register"
               exact
               render={() => <Register base={"/register"} />}

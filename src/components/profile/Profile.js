@@ -117,7 +117,6 @@ class Profile extends React.Component {
       this.state.updateBirthday !== null ||
       this.state.updateUsername !== null
     ) {
-      alert("swag");
       fetch(`${getDomain()}/user/${localStorage.getItem("myID")}`, {
         method: "PUT",
         headers: {
@@ -131,7 +130,6 @@ class Profile extends React.Component {
       })
         .then(response => {
           if (response.status === 204) {
-            alert("status ok 204");
           } else if (response.status === 404) {
             throw new Error("User ID was not found or Username taken");
           }
