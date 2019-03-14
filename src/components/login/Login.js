@@ -75,7 +75,7 @@ class Login extends React.Component {
   constructor() {
     super();
     this.state = {
-      name: null,
+      password: null,
       username: null
     };
   }
@@ -91,7 +91,7 @@ class Login extends React.Component {
       },
       body: JSON.stringify({
         username: this.state.username,
-        name: this.state.name
+        password: this.state.password
       })
     })
       .then(response => response.json())
@@ -160,11 +160,11 @@ class Login extends React.Component {
               name="loginpassword"
               placeholder="Enter here.."
               onChange={e => {
-                this.handleInputChange("name", e.target.value);
+                this.handleInputChange("password", e.target.value);
               }}
             />
             <Button
-              disabled={this.state.username || this.state.name}
+              disabled={this.state.username || this.state.password}
               onClick={() => {
                 this.registerhere();
               }}
@@ -174,7 +174,7 @@ class Login extends React.Component {
 
             <ButtonContainer>
               <Button
-                disabled={!this.state.username || !this.state.name}
+                disabled={!this.state.username || !this.state.password}
                 width="50%"
                 onClick={() => {
                   this.login();

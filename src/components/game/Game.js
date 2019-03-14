@@ -31,9 +31,7 @@ class Game extends React.Component {
       users: null
     };
   }
-  userprofile() {
-    this.props.history.push("/user");
-  }
+
   logout() {
     localStorage.removeItem("token");
     localStorage.removeItem("myID");

@@ -2,7 +2,6 @@ import React from "react";
 import styled from "styled-components";
 import { BaseContainer } from "../../helpers/layout";
 import { getDomain } from "../../helpers/getDomain";
-import User from "../shared/models/User";
 import { withRouter } from "react-router-dom";
 import { Button } from "../../views/design/Button";
 
@@ -61,7 +60,7 @@ class Register extends React.Component {
     super();
     this.state = {
       username: null,
-      name: null
+      password: null
     };
   }
   register() {
@@ -72,7 +71,7 @@ class Register extends React.Component {
       },
       body: JSON.stringify({
         username: this.state.username,
-        name: this.state.name
+        password: this.state.password
       })
     })
       .then(response => {
@@ -123,13 +122,13 @@ class Register extends React.Component {
               name="pwd"
               placeholder="Enter here.."
               onChange={e => {
-                this.handleInputChange("name", e.target.value);
+                this.handleInputChange("password", e.target.value);
               }}
             />
 
             <ButtonContainer>
               <Button
-                disabled={!this.state.username || !this.state.name}
+                disabled={!this.state.username || !this.state.password}
                 width="50%"
                 onClick={() => {
                   this.register();

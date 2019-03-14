@@ -6,32 +6,6 @@ import User from "../shared/models/User";
 import { withRouter } from "react-router-dom";
 import { Button } from "../../views/design/Button";
 
-const Container = styled.div`
-  margin: 6px 0;
-  width: 280px;
-  padding: 10px;
-  border-radius: 6px;
-  display: flex;
-  align-items: center;
-  border: 1px solid #ffffff26;
-`;
-
-const UserName = styled.div`
-  font-weight: lighter;
-  margin-left: 5px;
-`;
-
-const Name = styled.div`
-  font-weight: bold;
-  color: #06c4ff;
-`;
-
-const Id = styled.div`
-  margin-left: auto;
-  margin-right: 10px;
-  font-weight: bold;
-`;
-
 const FormContainer = styled.div`
   margin-top: 2em;
   display: flex;
@@ -87,19 +61,17 @@ class Profile extends React.Component {
     super();
     this.state = {
       username: null,
-      name: null,
+      password: null,
       status: null,
       token: null,
       date: null,
       birthday: "Unknown",
       id: null,
       updateUsername: null,
-      updateBirthday: "test"
+      updateBirthday: null
     };
   }
-  swag() {
-    localStorage.removeItem("id");
-  }
+
   componentDidMount() {
     const key = localStorage.getItem("id");
     fetch(`${getDomain()}${key}`, {
@@ -110,23 +82,21 @@ class Profile extends React.Component {
     })
       .then(response => {
         if (response.status === 200) {
-          alert("status ok 200");
         } else if (response.status === 404) {
           throw new Error("User ID was not found");
         }
         return response.json();
       })
 
-      .then(async returnedUser => {
-        await new Promise(resolve => setTimeout(resolve, 800));
+      .then(returnedUser => {
         const user = new User(returnedUser);
+        localStorage.setItem("hisID", user.id);
         this.handleInputChange("id", user.id);
         this.handleInputChange("username", user.username);
         this.handleInputChange("status", user.status);
         this.handleInputChange("date", user.date);
-        this.handleInputChange("name", user.name);
+        this.handleInputChange("password", user.password);
         this.handleInputChange("birthday", user.birthday);
-        localStorage.setItem("hisID", user.id);
       })
 
       .catch(err => {
@@ -144,7 +114,7 @@ class Profile extends React.Component {
 
   editProfile() {
     if (
-      this.state.updateBirthday !== null &&
+      this.state.updateBirthday !== null ||
       this.state.updateUsername !== null
     ) {
       alert("swag");
@@ -162,7 +132,6 @@ class Profile extends React.Component {
         .then(response => {
           if (response.status === 204) {
             alert("status ok 204");
-            this.props.history.push(`/user/${localStorage.getItem("myID")}`);
           } else if (response.status === 404) {
             throw new Error("User ID was not found or Username taken");
           }
@@ -175,13 +144,11 @@ class Profile extends React.Component {
           }
         });
     } else {
-      alert("Else alert");
+      alert("Type in the input field to edit profile");
     }
   }
 
   handleInputChange(key, value) {
-    // Example: if the key is username, this statement is the equivalent to the following one:
-    // this.setState({'username': value});
     this.setState({ [key]: value });
   }
 
@@ -189,21 +156,22 @@ class Profile extends React.Component {
     return (
       <BaseContainer>
         <FormContainer>
-          <Label>Profile {this.state.updateUsername}</Label>
+          <Label>Profile </Label>
           <Button
-            //disabled={
-            // localStorage.getItem("hisID") !== localStorage.getItem("myID")
-            //}
+            disabled={
+              localStorage.getItem("hisID") !== localStorage.getItem("myID")
+            }
             width={"20%"}
             onClick={() => {
               this.editProfile();
+              window.location.reload();
             }}
           >
             Edit Profile
           </Button>
           <Form>
             <h3>
-              UserName: {this.state.username} {localStorage.getItem("myID")}
+              UserName: {this.state.username}
               <div align="right">
                 {" "}
                 <InputField
@@ -214,17 +182,14 @@ class Profile extends React.Component {
                 />
               </div>
             </h3>
-
-            <h3>
-              Status: {this.state.status} {this.state.id}
-            </h3>
+            <h3>Status: {this.state.status}</h3>
             <h3>Creation Date: {this.state.date} </h3>
             <h3>
               Birthday: {this.state.birthday}
               <div align="right">
                 {" "}
                 <InputField
-                  placeholder="Edit Birthday"
+                  placeholder="dd/mm/yyyy"
                   onChange={e => {
                     this.handleInputChange("updateBirthday", e.target.value);
                   }}
@@ -239,7 +204,7 @@ class Profile extends React.Component {
                   this.props.history.push(`/game`);
                 }}
               >
-                Use und lösche {localStorage.getItem("id")}
+                Back to Dashboard
               </Button>
             </ButtonContainer>
           </Form>
