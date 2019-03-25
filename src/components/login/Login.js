@@ -75,7 +75,7 @@ class Login extends React.Component {
   constructor() {
     super();
     this.state = {
-      name: null,
+      password: null,
       username: null
     };
   }
@@ -84,23 +84,31 @@ class Login extends React.Component {
    * If the request is successful, a new user is returned to the front-end and its token is stored in the localStorage.
    */
   login() {
-    fetch(`${getDomain()}/users`, {
+    fetch(`${getDomain()}/login`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json"
       },
       body: JSON.stringify({
         username: this.state.username,
-        name: this.state.name
+        password: this.state.password
       })
     })
       .then(response => response.json())
       .then(returnedUser => {
         const user = new User(returnedUser);
         // store the token into the local storage
-        localStorage.setItem("token", user.token);
-        // user login successfully worked --> navigate to the route /game in the GameRouter
-        this.props.history.push(`/game`);
+        if (user.error === 0) {
+          localStorage.setItem("token", user.token);
+          localStorage.setItem("myID", user.id);
+          // user login successfully worked --> navigate to the route /game in the GameRouter
+          this.props.history.push(`/game`);
+          alert("Login Successful!");
+        } else if (user.error === 2) {
+          alert("Wrong Username doesn't match Password");
+        } else {
+          alert("Username and/or Password wrong");
+        }
       })
       .catch(err => {
         if (err.message.match(/Failed to fetch/)) {
@@ -109,6 +117,9 @@ class Login extends React.Component {
           alert(`Something went wrong during the login: ${err.message}`);
         }
       });
+  }
+  registerhere() {
+    this.props.history.push("/register");
   }
 
   /**
@@ -143,16 +154,27 @@ class Login extends React.Component {
                 this.handleInputChange("username", e.target.value);
               }}
             />
-            <Label>Name</Label>
+            <Label>Password</Label>
             <InputField
+              type="password"
+              name="loginpassword"
               placeholder="Enter here.."
               onChange={e => {
-                this.handleInputChange("name", e.target.value);
+                this.handleInputChange("password", e.target.value);
               }}
             />
+            <Button
+              disabled={this.state.username || this.state.password}
+              onClick={() => {
+                this.registerhere();
+              }}
+            >
+              Register here
+            </Button>
+
             <ButtonContainer>
               <Button
-                disabled={!this.state.username || !this.state.name}
+                disabled={!this.state.username || !this.state.password}
                 width="50%"
                 onClick={() => {
                   this.login();

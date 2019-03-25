@@ -34,6 +34,7 @@ class Game extends React.Component {
 
   logout() {
     localStorage.removeItem("token");
+    localStorage.removeItem("myID");
     this.props.history.push("/login");
   }
 
@@ -72,7 +73,14 @@ class Game extends React.Component {
               {this.state.users.map(user => {
                 return (
                   <PlayerContainer key={user.id}>
-                    <Player user={user} />
+                    <button
+                      onClick={() => {
+                        localStorage.setItem("id", "/user/" + user.id);
+                        this.props.history.push(`/user`);
+                      }}
+                    >
+                      <Player user={user} />
+                    </button>
                   </PlayerContainer>
                 );
               })}
